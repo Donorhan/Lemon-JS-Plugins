@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Box2D - Plugins</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="../shared/style.css" />
+        <script src="../shared/Lemon.min.js"></script>
+        <script src="./libs/Box2D_v2.3.1_min.js"></script>
+        <script src="./libs/embox2d-helpers.js"></script>
+        <script src="./src/GraphicModule.js"></script>
+        <script src="./src/PhysicModule.js"></script>
+        <script src="./src/DebugDraw.js"></script>
+    </head>
+    <body>
+
+        <div id="wrapper">
+            <div id="simulation"></div>
+        </div>
+
+        <script>
+
+            window.onload = function()
+            {
+                // Create modules.
+                var graphic = new GraphicModule();  // Lemon part.
+                var physic  = new PhysicModule();   // Box2D part.
+
+                // Init modules.
+                graphic.init();
+                physic.init();
+
+                // Create tests.
+                physic.createBloc([0.0, -2.0], 0, [6.0, 0.05], true, null);
+
+                // Enable debug draw.
+                var debug = new DebugDraw(physic.getWorld(), graphic.getRenderer());
+
+                var boxMax      = 5;
+                var boxCount    = 0;
+                var lastTime    = 0;
+
+                // Main loop.
+                var previous = 0, diff = 0;
+                function mainLoop( timestamp )
+                {
+                    requestAnimationFrame(mainLoop);
+
+                    // Calculate elapsed time between two frames.
+                    diff     = timestamp - previous;
+                    previous = timestamp;
+
+                    // Process modules.
+                    physic.update(diff);
+                    graphic.update(diff);
+
+                    // Draw debug world.
+                    debug.draw();
+
+                    // Synchronize physic bodies with graphic objects.
+                    // Important: You need to set user data on physic bodies to retrive them here.
+                    var bodies = physic.getBodies();
+                    for( var i = 0; i < bodies.length; i++ )
+                    {
+                        if( bodies[i].userData )
+                        {           
+                            var mesh = bodies[i].userData;                 
+                            mesh.setPosition(bodies[i].GetPosition().get_x(), bodies[i].GetPosition().get_y(), 0);
+                            mesh.setRotation(0, 0, bodies[i].GetAngle()); 
+                        }     
+                    }
+
+                    // Add random boxes to the scene.
+                    lastTime += diff;
+                    if( boxCount < boxMax && lastTime > 500.0 )
+                    {
+                        physic.createBloc([Math.random(), 1.0], 0, [0.3 + (Math.random() * 0.5), 0.3 + (Math.random() * 0.5)], false, null);
+                        boxCount++;
+                        lastTime = 0;
+                    }
+                }
+                requestAnimationFrame(mainLoop);
+            };
+
+        </script>
+    </body>
+</html>
