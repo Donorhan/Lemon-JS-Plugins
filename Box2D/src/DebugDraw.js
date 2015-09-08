@@ -132,15 +132,15 @@ DebugDraw.prototype.drawCircle = function( center, radius, axis, fill, color )
     var axisV   = Box2D.wrapPointer(axis, Box2D.b2Vec2);
 
     var precision   = 16;
-    var k_increment = 2.0 * b2_pi / precision;
+    var k_increment = 2.0 * Math.PI / precision;
     var theta       = 0.0;
 
     // Vertices.
     var positions = [];
-    for( var i = 0; i < precision; i++ )
+    for( var i = 0, j = 0; i < precision; i++, j += 2 )
     {
-        positions[j+0] = centerV.get_x() + radius * cos(theta);
-        positions[j+1] = centerV.get_y() + radius * sin(theta);
+        positions[j+0] = centerV.get_x() + radius * Math.cos(theta);
+        positions[j+1] = centerV.get_y() + radius * Math.sin(theta);
         theta         += k_increment;
     }
     this.geometry.setPositions(positions);
@@ -149,6 +149,7 @@ DebugDraw.prototype.drawCircle = function( center, radius, axis, fill, color )
     var indices = [];
     for( var i = 0; i < precision; i++ )
         indices[i] = i;
+    this.geometry.setIndices(indices);
 
     this.drawMesh(DebugDraw.DrawingModes.Lines, indices.length, [color.get_r(), color.get_g(), color.get_b()]);
 };

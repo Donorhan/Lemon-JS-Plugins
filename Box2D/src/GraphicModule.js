@@ -12,7 +12,6 @@ GraphicModule.prototype.init = function()
 {
     // Set path to shaders and load the default shader.
     Lemon.ProgramLibrary.folderPath = '../extlibs/shaders/';
-    Lemon.ProgramLibrary.load("DefaultShader", 'default.vert', 'default.frag');
 
     // Init camera.
     this.camera.move(0, 0, 1.0);

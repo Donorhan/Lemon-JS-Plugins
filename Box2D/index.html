@@ -35,7 +35,7 @@
                 // Enable debug draw.
                 var debug = new DebugDraw(physic.getWorld(), graphic.getRenderer());
 
-                var boxMax      = 5;
+                var boxMax      = 10;
                 var boxCount    = 0;
                 var lastTime    = 0;
 
@@ -73,7 +73,11 @@
                     lastTime += diff;
                     if( boxCount < boxMax && lastTime > 500.0 )
                     {
-                        physic.createBloc([Math.random(), 1.0], 0, [0.3 + (Math.random() * 0.5), 0.3 + (Math.random() * 0.5)], false, null);
+                        if( Math.random() < 0.5 )
+                            physic.createBloc([Math.random(), 1.0], 0, [0.3 + (Math.random() * 0.5), 0.3 + (Math.random() * 0.5)], false, null);
+                        else
+                            physic.createCircle([Math.random(), 1.0], 0, 0.3 + (Math.random() * 0.5), false, null);
+
                         boxCount++;
                         lastTime = 0;
                     }
